@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
+import AudioSelect from './AudioSelect';
 import './Metronome.css';
-import click1 from './audio/bark1.wav';
-import click2 from './audio/bark2.wav';
 
 class Metronome extends Component {
   constructor(props) {
@@ -11,12 +10,20 @@ class Metronome extends Component {
       playing: false,
       count: 0,
       bpm: 100,
-      beatsPerMeasure: 4
+      beatsPerMeasure: 4,
+      // using state to determine audio
+      primary: props.primaryAudio,
+      secondary: props.secondaryAudio
     }
 
-    this.click1 = new Audio(click1);
-    this.click2 = new Audio(click2);
+  }
 
+  setAudio = (primaryAudio, secondaryAudio) => {
+    console.log('primary:', primaryAudio, 'secondary:', secondaryAudio)
+    this.setState({
+      primary: primaryAudio.audioObject,
+      secondary: secondaryAudio.audioObject
+    })
   }
 
   handleBpmChange = e => {
@@ -25,6 +32,7 @@ class Metronome extends Component {
   }
   
   startStop = () => {
+    console.log(this.state);
     if (this.state.playing) {
       //stop the timer
       clearInterval(this.timer);
@@ -52,9 +60,11 @@ class Metronome extends Component {
 
     //the first beat will have a different sound
     if (count % beatsPerMeasure === 0 ) {
-      this.click2.play();
+      this.state.secondary.currentTime = 0;
+      this.state.secondary.play();
     } else {
-      this.click1.play();
+      this.state.primary.currentTime = 0;
+      this.state.primary.play();
     }
 
     this.setState(state => ({
@@ -86,6 +96,7 @@ class Metronome extends Component {
 
     return (
       <div className="metronome">
+        <AudioSelect getClicks={this.setAudio}/>
         <div className="bpm-slider">
           <div>{bpm} BPM</div>
           <input 
