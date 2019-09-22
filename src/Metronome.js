@@ -60,11 +60,11 @@ class Metronome extends Component {
 
     //the first beat will have a different sound
     if (count % beatsPerMeasure === 0 ) {
-      this.state.secondary.currentTime = 0;
-      this.state.secondary.play();
-    } else {
       this.state.primary.currentTime = 0;
       this.state.primary.play();
+    } else {
+      this.state.secondary.currentTime = 0;
+      this.state.secondary.play();
     }
 
     this.setState(state => ({
